@@ -34,12 +34,24 @@ pub fn add(action: &str) {
     file::append(is_first, task);
 }
 
+pub fn delete(id: &str) {
+    let tasks = file::read();
+
+    let mapped  = tasks.split("|")
+        .filter(|f| !f.is_empty())
+        .filter(|f| f.chars().next().unwrap() != id.chars().next().unwrap())
+        .collect::<Vec<&str>>()
+        .join("|");
+
+    _ = file::timpa(mapped);
+}
+
 pub fn execute(command: &str, action: &str) {
     match command {
         LIST => list(),
         ADD => add(action),
         UPDATE => list(),
-        DELETE => list(),
+        DELETE => delete(action),
         _ => println!("usage kafka <list|add|update|delete> <action>"),
     }
 }

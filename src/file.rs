@@ -15,7 +15,7 @@ pub mod file {
     pub fn append(is_first: bool, text: String) -> std::io::Result<()> {
         let mut file = fs::OpenOptions::new()
         .append(true)
-        .create(true) // bikin file baru kalo belum ada
+        .create(true)
         .open(FILE)?;
 
         if is_first {
@@ -25,7 +25,20 @@ pub mod file {
         }
 
         Ok(())
-    } 
+    }
+
+    pub fn timpa(text: String) -> std::io::Result<()> {
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)   // <- ini kunci: kosongin isi file dulu sebelum nulis
+            .open(FILE)?;
+
+
+        write!(file, "{text}");
+
+        Ok(())
+    }
 
     fn create() -> String {
         if let Err(_e) = fs::write(FILE, "") {
